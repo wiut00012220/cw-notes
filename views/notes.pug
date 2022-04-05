@@ -5,7 +5,12 @@ block content
    h1 All notes
 
     each note in notes 
-     div.note-wrapper
-       a.note(href=`/notes/${ note.id }`) #{note.title}  
-       a.delete(href="#") delete 
+      div.note-wrapper
+        a.note(href=`/notes/${ note.id }`) #{note.title}  
+
+        form(action=`/notes/edit/${ note.id }` method="POST")
+          button.edit Edit 
+
+        form(action=`/notes/delete/${ note.id }` method="POST")
+          button.delete Delete 
              

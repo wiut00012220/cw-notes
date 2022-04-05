@@ -11,7 +11,7 @@ app.use("/static", express.static("public"));
 
 app.use(express.urlencoded({ extended: false }));
 
-// localhost:8000
+// localhost:5000
 app.get("/", (req, res) => {
   res.render("home");
 });
@@ -47,6 +47,16 @@ app.post("/create", (req, res) => {
   }
 });
 
+app.get("/api/v1/notes", (req, res) => {
+  fs.readFile("./data/notes.json", (err, data) => {
+    if (err) throw err;
+
+    const notes = JSON.parse(data);
+
+    res.json(notes);
+  });
+});
+//
 app.get("/notes", (req, res) => {
   fs.readFile("./data/notes.json", (err, data) => {
     if (err) throw err;
@@ -56,6 +66,7 @@ app.get("/notes", (req, res) => {
     res.render("notes", { notes: notes });
   });
 });
+//
 
 app.get("/notes/:id", (req, res) => {
   const id = req.params.id;
@@ -70,11 +81,70 @@ app.get("/notes/:id", (req, res) => {
     res.render("detail", { title: note.title, description: note.description });
   });
 });
+//
 
-app.listen(3000, (err) => {
+app.post("/notes/delete/:id", (req, res) => {
+  const id = req.params.id;
+
+  fs.readFile("./data/notes.json", (err, data) => {
+    if (err) throw err;
+
+    const notes = JSON.parse(data);
+
+    const newNotes = notes.filter((note) => note.id !== id);
+
+    res.redirect("/notes");
+
+    fs.writeFile("./data/notes.json", JSON.stringify(newNotes), (err) => {
+      if (err) throw err;
+
+      res.render("create", { success: true });
+    });
+  });
+});
+// Edit
+app.post("/notes/edit/:id", (req, res) => {
+  const id = req.params.id;
+
+  fs.readFile("./data/notes.json", (err, data) => {
+    if (err) throw err;
+
+    const notes = JSON.parse(data);
+
+    const noteToUpdate = notes.find((note) => note.id === id);
+
+    console.log(noteToUpdate);
+
+    res.render("update", { note: noteToUpdate });
+  });
+});
+
+app.post("/notes/update/:id", (req, res) => {
+  const id = req.params.id;
+
+  fs.readFile("./data/notes.json", (err, data) => {
+    if (err) throw err;
+
+    const notes = JSON.parse(data);
+
+    const noteToUpdate = notes.find((note) => note.id === id);
+
+    noteToUpdate.title = req.body.title;
+
+    noteToUpdate.description = req.body.description;
+
+    fs.writeFile("./data/notes.json", JSON.stringify(notes), (err) => {
+      if (err) throw err;
+
+      res.redirect("/notes");
+    });
+  });
+});
+
+app.listen(5000, (err) => {
   if (err) console.log(err);
 
-  console.log("server is running on port 3000...");
+  console.log("server is running on port 5000...");
 });
 
 function id() {

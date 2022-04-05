@@ -30,6 +30,10 @@ a:hover {
   padding: 5px 8px;
 }
 
+.archive {
+  margin-left: 10px;
+}
+
 /*homepage*/
 .container {
   max-width: 1000px;
@@ -93,7 +97,7 @@ a:hover {
 .delete {
   display: inline-block;
   padding: 5px 10px;
-  background: blue;
+  background: red;
   color: #fff;
 }
 
@@ -113,4 +117,11 @@ a:hover {
   font-size: 1.2rem;
 
   color: blue;
+}
+
+.edit {
+  display: inline-block;
+  padding: 5px 10px;
+  background: blue;
+  color: #fff;
 }
